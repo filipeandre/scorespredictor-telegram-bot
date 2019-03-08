@@ -58,13 +58,13 @@ func seedTable(name string, htmlStr string, db *sql.DB){
 
 			if tableCell.HasClass("Date"){
 				value, _ = tableCell.Find("[name=gdate]").Attr("value")
-				location1,_ := time.LoadLocation("America/New_York")
+				location1,_ := time.LoadLocation(websiteTimeZone)
 				t1, err :=  time.ParseInLocation("2006-01-02 15:04:05", value, location1 )
 
 				if err != nil {
 					stderr(err)
 				}
-				location2,_ := time.LoadLocation("Europe/Rome")
+				location2,_ := time.LoadLocation(homeTimeZone)
 				value = t1.In(location2).Format("2006-01-02 15:04:05")
 
 			}else if tableCell.Children().HasClass("Name"){

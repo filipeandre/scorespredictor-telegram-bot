@@ -9,9 +9,16 @@ import (
 	"time"
 )
 
+var (
+	dbFileName =  "/tmp5711903412.db"
+	xlsxFileName = "scorespredictor.xlsx"
+	homeTimeZone =  "Europe/Rome"
+	websiteTimeZone = "America/New_York"
+)
+
 func main() {
 	conf := loadConfiguration()
-	location,_ := time.LoadLocation("Europe/Rome")
+	location,_ := time.LoadLocation(homeTimeZone)
 	date := time.Now().In(location).Format("2006-01-02")
 	respC := map[int]chan *htmlTable{}
 
@@ -37,8 +44,9 @@ func main() {
 
 	//Wait each response and generate the xlsx object
 	file := xlsx.NewFile()
-	removeFile(conf.Temp + "/tmp.db")
-	db:= createDb(conf.Temp+ "/tmp.db", conf.Sports)
+	dbFilePath := conf.Temp + dbFileName
+	removeFile(dbFilePath)
+	db:= createDb(dbFilePath, conf.Sports)
 	parts:= strings.Split(conf.Filter, ";")
 
 	for i:= 0; i< len(conf.Sports); i++{
@@ -63,10 +71,10 @@ func main() {
 	if err != nil {
 		stderr(err)
 	}
-	removeFile(conf.Temp + "/tmp.db")
+	removeFile(dbFilePath)
 
 	//Remove any existent xlsx and write the new xlsx to disk, them remove it
-	fileName:= conf.Temp + "/" + date + "_scorespredictor.xlsx"
+	fileName:= conf.Temp + "/" + date + "_" + xlsxFileName
 	removeFile(fileName)
 	err = file.Save(fileName)
 	if err != nil {
