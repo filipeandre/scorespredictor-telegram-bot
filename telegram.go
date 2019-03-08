@@ -6,7 +6,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"strings"
-	"time"
 )
 
 type to struct {
@@ -17,6 +16,18 @@ func (obj to) Recipient() string {
 	return  obj.Channel
 }
 
+var bot *tb.Bot
+
+func initBot(token string){
+	var err error
+	bot, err = tb.NewBot(tb.Settings{
+		Token:  token,
+		URL: "https://api.telegram.org",
+	})
+	if err != nil {
+		stderr(err)
+	}
+}
 
 //Generate telegram message
 func generateMarkdown(htmlStr string, tableName string, where string, db *sql.DB, ) string{
@@ -112,16 +123,11 @@ func sendTelegramMessage(token string, channel string, msg string){
 		return
 	}
 
-	b, err := tb.NewBot(tb.Settings{
-		Token:  token,
-		URL: "https://api.telegram.org",
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
-	})
-	if err != nil {
-		stderr(err)
+	if bot == nil{
+		initBot(token)
 	}
 
-	_, err = b.Send( &to{Channel: channel}, msg, &tb.SendOptions{
+	_, err := bot.Send( &to{Channel: channel}, msg, &tb.SendOptions{
 		ParseMode: tb.ModeMarkdown,
 	})
 	if err != nil {
@@ -135,17 +141,12 @@ func sendTelegramFile(token string, channel string, path string){
 		return
 	}
 
-	b, err := tb.NewBot(tb.Settings{
-		Token:  token,
-		URL: "https://api.telegram.org",
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
-	})
-	if err != nil {
-		stderr(err)
+	if bot == nil{
+		initBot(token)
 	}
 
 	f := &tb.Document{File: tb.FromDisk(path)}
-	_, err = b.Send( &to{Channel: channel}, f)
+	_, err := bot.Send( &to{Channel: channel}, f)
 	if err != nil {
 		stderr(err)
 	}
