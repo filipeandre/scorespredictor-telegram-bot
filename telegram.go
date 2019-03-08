@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"github.com/PuerkitoBio/goquery"
 	tb "gopkg.in/tucnak/telebot.v2"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -151,27 +150,4 @@ func sendTelegramFile(token string, channel string, path string){
 		onError(err)
 	}
 
-}
-
-func listen(token string){
-
-	b, err := tb.NewBot(tb.Settings{
-		Token:  token,
-		URL: "https://api.telegram.org",
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
-	})
-	if err != nil {
-		onError(err)
-	}
-
-	b.Handle("/id", func (m *tb.Message) {
-		if strings.Index(m.Text, "/id") == 0{
-			_, err := b.Send(m.Sender, strconv.Itoa(m.Sender.ID))
-			if err != nil {
-				onError(err)
-			}
-		}
-	})
-
-	b.Start()
 }

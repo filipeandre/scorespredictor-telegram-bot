@@ -6,22 +6,14 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	_ "github.com/mattn/go-sqlite3"
 	"math"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 )
 
-
 //Create a simple temp database
 func createDb(path string, tables []string) *sql.DB{
 
-	if _, err := os.Stat(path); err == nil {
-		err := os.Remove(path)
-		if err != nil {
-			onError(err)
-		}
-	}
 	database, err := sql.Open("sqlite3", path)
 	if err != nil {
 		onError(err)

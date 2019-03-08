@@ -14,15 +14,15 @@ type telegram struct {
 }
 
 type configuration struct {
-	Url    string `json:"url"`
-	Sports   []string `json:"sports"`
-	Telegram telegram `json:"telegram"`
-	Storage string `json:"storage"`
-	Filter string `json:"filter"`
+	Url      string    `json:"url"`
+	Sports   []string  `json:"sports"`
+	Telegram *telegram `json:"telegram"`
+	Temp     string    `json:"temp"`
+	Filter   string    `json:"filter"`
 }
 
 //Load configs
-func loadConfiguration() configuration {
+func loadConfiguration() *configuration {
 
 	path:= os.Getenv("SCORESPREDICTOR_HOME") + ".env.yaml"
 	if _, err := os.Stat(path); err == nil {
@@ -32,15 +32,15 @@ func loadConfiguration() configuration {
 		}
 	}
 
-	configuration := configuration{
+	configuration := &configuration{
 		Url:os.Getenv("SCORESPREDICTOR_URL"),
-		Telegram: telegram {
+		Telegram: &telegram {
 			Token: os.Getenv("TELEGRAM_BOT_TOKEN"),
 			Channel: os.Getenv("TELEGRAM_BOT_CHANNEL"),
 			Channel2: os.Getenv("TELEGRAM_BOT_CHANNEL2"),
 		},
 		Sports: strings.Split(os.Getenv("SCORESPREDICTOR_SPORTS"), ";"),
-		Storage: os.Getenv("STORAGE_PATH"),
+		Temp:   os.TempDir(),
 		Filter: os.Getenv("FILTER"),
 	}
 

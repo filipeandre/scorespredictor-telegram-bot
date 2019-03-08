@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gocolly/colly"
 	"github.com/tealeg/xlsx"
-	"os"
 	"strings"
 	"time"
 )
@@ -23,7 +22,7 @@ func main() {
 		respC[i] = make(chan *htmlTable)
 		respI:=i
 
-		//Populate respC map on response
+		//Populate chanel store on response received
 		c.OnResponse(func(r *colly.Response) {
 			print(fmt.Sprintf("Response received, status: %d", r.StatusCode))
 			data := &htmlTable{}
@@ -38,10 +37,9 @@ func main() {
 
 	//Wait each response and generate the xlsx object
 	file := xlsx.NewFile()
-	db:= createDb(conf.Storage + "/tmp.db", conf.Sports)
+	removeFile(conf.Temp + "/tmp.db")
+	db:= createDb(conf.Temp+ "/tmp.db", conf.Sports)
 	parts:= strings.Split(conf.Filter, ";")
-
-
 
 	for i:= 0; i< len(conf.Sports); i++{
 		name:= conf.Sports[i]
@@ -60,21 +58,21 @@ func main() {
 		sendTelegramMessage(conf.Telegram.Token, conf.Telegram.Channel, generateMarkdown(response.Html, name, filter, db))
 	}
 
-	//Write file to disk
-	fileName:= conf.Storage + "/" + date + "_scorespredictor.xlsx"
-	err := file.Save(fileName)
+	//Close the database and remove it
+	err:= db.Close()
 	if err != nil {
 		onError(err)
 	}
+	removeFile(conf.Temp + "/tmp.db")
 
+	//Remove any existent xlsx and write the new xlsx to disk, them remove it
+	fileName:= conf.Temp + "/" + date + "_scorespredictor.xlsx"
+	removeFile(fileName)
+	err = file.Save(fileName)
+	if err != nil {
+		onError(err)
+	}
 	print(fmt.Sprintf("Saved: %s", fileName))
 	sendTelegramFile(conf.Telegram.Token, conf.Telegram.Channel2, fileName)
-
-	//Remove file at end
-	if _, err := os.Stat(fileName); err == nil {
-		err := os.Remove(fileName)
-		if err != nil {
-			onError(err)
-		}
-	}
+	removeFile(fileName)
 }
