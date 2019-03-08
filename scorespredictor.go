@@ -47,7 +47,7 @@ func main() {
 		name:= conf.Sports[i]
 
 		var filter string
-		if len(parts) >= i{
+		if len(parts) > i{
 			filter=parts[i]
 		}else{
 			filter=parts[0]
