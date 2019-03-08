@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gocolly/colly"
 	"github.com/tealeg/xlsx"
+	"os"
 	"time"
 )
 
@@ -55,4 +56,12 @@ func main() {
 
 	print(fmt.Sprintf("Saved: %s", fileName))
 	sendTelegramFile(conf.Telegram.Token, conf.Telegram.Channel2, fileName)
+
+	//Remove file at end
+	if _, err := os.Stat(fileName); err == nil {
+		err := os.Remove(fileName)
+		if err != nil {
+			onError(err)
+		}
+	}
 }
