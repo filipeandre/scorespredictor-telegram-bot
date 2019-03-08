@@ -103,7 +103,7 @@ func generateMarkdown(htmlStr string, tableName string, where string, db *sql.DB
 		tableData = "No Matches found today."
 	}
 
-	return tableName + " " + where + ":\n" + tableData
+	return "*" +tableName + " " + where + "*\n" + tableData
 }
 
 //Send telegram message to a specific chanel or chat id
