@@ -52,6 +52,7 @@ func main() {
 	if err != nil {
 		onError(err)
 	}
-	//sendTelegramFile(conf.Telegram.Token, conf.Telegram.Channel2, fileName)
-	//print(fmt.Sprintf("Saved: " + fileName))
+
+	print(fmt.Sprintf("Saved: %s", fileName))
+	sendTelegramFile(conf.Telegram.Token, conf.Telegram.Channel2, fileName)
 }

@@ -109,6 +109,10 @@ func generateMarkdown(htmlStr string, tableName string, where string, db *sql.DB
 //Send telegram message to a specific chanel or chat id
 func sendTelegramMessage(token string, channel string, msg string){
 
+	if channel == ""{
+		return
+	}
+
 	b, err := tb.NewBot(tb.Settings{
 		Token:  token,
 		URL: "https://api.telegram.org",
@@ -127,6 +131,10 @@ func sendTelegramMessage(token string, channel string, msg string){
 }
 
 func sendTelegramFile(token string, channel string, path string){
+
+	if channel == ""{
+		return
+	}
 
 	b, err := tb.NewBot(tb.Settings{
 		Token:  token,
@@ -164,4 +172,6 @@ func listen(token string){
 			}
 		}
 	})
+
+	b.Start()
 }
