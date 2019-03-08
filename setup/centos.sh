@@ -21,6 +21,6 @@ SHELL=/bin/bash
 MAILTO=nicola
 CRON_TZ=Europe/Rome
 
-0 10 * * * nicola source /etc/profile && cd /home/nicola/source/scorespredictor/ && go run *go
+0 10 * * * nicola source /etc/profile && cd /home/nicola/source/scorespredictor/ && go build -i -o compiled && ./compiled >/dev/null
 EOT
 ' && sudo systemctl restart crond.service
