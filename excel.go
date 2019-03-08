@@ -81,12 +81,12 @@ func appendHeaders(tableHtml *goquery.Selection, sheet *xlsx.Sheet, addLeague bo
 func saveSheet(name string, table string, htmlStr string, file *xlsx.File, db *sql.DB, where string){
 	sheet, err := file.AddSheet(name)
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader("<html><body>" + htmlStr + "</body></html>"))
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 
 	var (
@@ -104,12 +104,12 @@ func saveSheet(name string, table string, htmlStr string, file *xlsx.File, db *s
 		row= sheet.AddRow()
 		err:= rows.Scan(&line)
 		if err != nil {
-			onError(err)
+			stderr(err)
 		}
 		var cells []string
 		err =json.Unmarshal([]byte(line), &cells)
 		if err != nil {
-			onError(err)
+			stderr(err)
 		}
 
 		for i:=0;i< len(cells); i++{

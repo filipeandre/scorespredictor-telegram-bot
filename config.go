@@ -28,7 +28,7 @@ func loadConfiguration() *configuration {
 	if _, err := os.Stat(path); err == nil {
 		err := godotenv.Load(path)
 		if err != nil {
-			onError(err)
+			stderr(err)
 		}
 	}
 

@@ -10,10 +10,10 @@ var (
 	errorLogger = log.New(os.Stderr, "", 0)
 )
 
-func onError(err error) {
+func stderr(err error) {
 	errorLogger.Fatal(err)
 }
 
-func print(msg string) {
+func stdout(msg string) {
 	stdLogger.Println(msg)
 }

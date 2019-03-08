@@ -7,7 +7,7 @@ func removeFile(fileName string){
 	if _, err := os.Stat(fileName); err == nil {
 		err := os.Remove(fileName)
 		if err != nil {
-			onError(err)
+			stderr(err)
 		}
 	}
 }

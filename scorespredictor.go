@@ -24,13 +24,13 @@ func main() {
 
 		//Populate chanel store on response received
 		c.OnResponse(func(r *colly.Response) {
-			print(fmt.Sprintf("Response received, status: %d", r.StatusCode))
+			stdout(fmt.Sprintf("Response received, status: %d", r.StatusCode))
 			data := &htmlTable{}
 			err := json.Unmarshal(r.Body, data)
 			respC[respI] <- data
 
 			if err != nil {
-				onError(err)
+				stderr(err)
 			}
 		})
 	}
@@ -61,7 +61,7 @@ func main() {
 	//Close the database and remove it
 	err:= db.Close()
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 	removeFile(conf.Temp + "/tmp.db")
 
@@ -70,9 +70,9 @@ func main() {
 	removeFile(fileName)
 	err = file.Save(fileName)
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
-	print(fmt.Sprintf("Saved: %s", fileName))
+	stdout(fmt.Sprintf("Saved: %s", fileName))
 	sendTelegramFile(conf.Telegram.Token, conf.Telegram.Channel2, fileName)
 	removeFile(fileName)
 }

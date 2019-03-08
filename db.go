@@ -16,17 +16,17 @@ func createDb(path string, tables []string) *sql.DB{
 
 	database, err := sql.Open("sqlite3", path)
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 
 	for i := 0; i < len(tables); i++ {
 		statement, err := database.Prepare("CREATE TABLE "+ tables[i] +" (line TEXT, goalsNum NUMBER, confidenceNum NUMBER)")
 		if err != nil {
-			onError(err)
+			stderr(err)
 		}
 		_, err = statement.Exec()
 		if err != nil{
-			onError(err)
+			stderr(err)
 		}
 	}
 
@@ -38,7 +38,7 @@ func seedTable(name string, htmlStr string, db *sql.DB){
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader("<html><body>" + htmlStr + "</body></html>"))
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 
 	// Select the first table
@@ -62,7 +62,7 @@ func seedTable(name string, htmlStr string, db *sql.DB){
 				t1, err :=  time.ParseInLocation("2006-01-02 15:04:05", value, location1 )
 
 				if err != nil {
-					onError(err)
+					stderr(err)
 				}
 				location2,_ := time.LoadLocation("Europe/Rome")
 				value = t1.In(location2).Format("2006-01-02 15:04:05")
@@ -87,7 +87,7 @@ func seedTable(name string, htmlStr string, db *sql.DB){
 			//Ignore last cell (cells[:len(cells) -1]) (Empty result)
 			b, err := json.Marshal(cells[:len(cells) -1])
 			if err != nil {
-				onError(err)
+				stderr(err)
 			}
 
 			parts := strings.Split(cells[3+extraOffset], ":")
@@ -105,10 +105,10 @@ func seedTable(name string, htmlStr string, db *sql.DB){
 func insertIntoTable(database *sql.DB, table string, line string, goalsNum int, confidenceNum float64){
 	statement, err := database.Prepare("INSERT INTO "+ table +" (line, goalsNum, confidenceNum) VALUES (?, ?, ?)")
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 	_, err =statement.Exec(line, goalsNum, confidenceNum)
 	if err != nil{
-		onError(err)
+		stderr(err)
 	}
 }

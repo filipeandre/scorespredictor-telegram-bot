@@ -20,7 +20,7 @@ func collect(url string, sport string, date string) *colly.Collector{
 	})
 
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 
 	return c

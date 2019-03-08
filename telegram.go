@@ -23,7 +23,7 @@ func generateMarkdown(htmlStr string, tableName string, where string, db *sql.DB
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader("<html><body>" + htmlStr + "</body></html>"))
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 
 	// Select the first table and write headers
@@ -79,12 +79,12 @@ func generateMarkdown(htmlStr string, tableName string, where string, db *sql.DB
 	for rows.Next() {
 		err:= rows.Scan(&line)
 		if err != nil {
-			onError(err)
+			stderr(err)
 		}
 		var cells []string
 		err =json.Unmarshal([]byte(line), &cells)
 		if err != nil {
-			onError(err)
+			stderr(err)
 		}
 		compact := ""
 		for i:=0; i< len(cells);i++{
@@ -118,14 +118,14 @@ func sendTelegramMessage(token string, channel string, msg string){
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 
 	_, err = b.Send( &to{Channel: channel}, msg, &tb.SendOptions{
 		ParseMode: tb.ModeMarkdown,
 	})
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 }
 
@@ -141,13 +141,13 @@ func sendTelegramFile(token string, channel string, path string){
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 
 	f := &tb.Document{File: tb.FromDisk(path)}
 	_, err = b.Send( &to{Channel: channel}, f)
 	if err != nil {
-		onError(err)
+		stderr(err)
 	}
 
 }
