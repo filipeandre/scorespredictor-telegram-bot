@@ -49,6 +49,7 @@ func appendHeaders(tableHtml *goquery.Selection, sheet *xlsx.Sheet, addLeague bo
 				cell = row.AddCell()
 				cell.Value = "League"
 				cell.Merge(0, 1)
+				subIndex = subIndex +1
 			}
 
 			rowI = getHeaderAttrIndex("rowspan",tableHeading)
