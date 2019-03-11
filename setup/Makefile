@@ -1,5 +1,6 @@
 build:
 	env CGO_ENABLED=1;
-	go mod vendor;
-	/usr/local/go/bin/go build;
-	mv scorespredictor ../../bin/scorespredictor;
+	cd ../;
+	/usr/local/go/bin/go build -i;
+	mv scorespredictor /urs/local/bin/scorespredictor;
+	cd -;
