@@ -60,10 +60,11 @@ func main() {
 		}
 
 		response := <- respC[i]
-		seedTable(name, response.Html, db)
-		saveSheet(name, name, response.Html, file, db, "")
-		saveSheet(name + " - filtred",name, response.Html, file, db, filter)
-		sendTelegramMessage(conf.Telegram.Token, conf.Telegram.Channel, generateMarkdown(response.Html, name, filter, db))
+		hasLeague := name == "HOCKEY"
+		seedTable(name, response.Html, db, hasLeague)
+		saveSheet(name, name, response.Html, file, db, "", hasLeague)
+		saveSheet(name + " - filtred",name, response.Html, file, db, filter, hasLeague)
+		sendTelegramMessage(conf.Telegram.Token, conf.Telegram.Channel, generateMarkdown(response.Html, name, filter, db, hasLeague))
 	}
 
 	//Close the database and remove it

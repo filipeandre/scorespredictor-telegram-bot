@@ -34,7 +34,7 @@ func createDb(path string, tables []string) *sql.DB{
 }
 
 //Seed a table
-func seedTable(name string, htmlStr string, db *sql.DB){
+func seedTable(name string, htmlStr string, db *sql.DB, hasLeague bool){
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader("<html><body>" + htmlStr + "</body></html>"))
 	if err != nil {
@@ -77,7 +77,7 @@ func seedTable(name string, htmlStr string, db *sql.DB){
 			cells = append(cells,value)
 
 			//Add the league value
-			if tableCell.HasClass("Date") && extraOffset == 1 {
+			if tableCell.HasClass("Date") && extraOffset == 1 && hasLeague {
 				value2, _ := tableCell.Find("[name=c_league]").Attr("value")
 				cells = append(cells,value2)
 			}

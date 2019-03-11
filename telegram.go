@@ -30,7 +30,7 @@ func initBot(token string){
 }
 
 //Generate telegram message
-func generateMarkdown(htmlStr string, tableName string, where string, db *sql.DB, ) string{
+func generateMarkdown(htmlStr string, tableName string, where string, db *sql.DB, hasLeague bool ) string{
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader("<html><body>" + htmlStr + "</body></html>"))
 	if err != nil {
@@ -58,7 +58,7 @@ func generateMarkdown(htmlStr string, tableName string, where string, db *sql.DB
 		}
 
 		//Add league header
-		if indexTh == 1 {
+		if indexTh == 1 && hasLeague {
 			headers = append(headers, "League")
 		}
 
@@ -112,8 +112,8 @@ func generateMarkdown(htmlStr string, tableName string, where string, db *sql.DB
 	}else {
 		tableData = "No Matches found today."
 	}
-
-	return "*" +tableName + " " + where + "*\n" + tableData
+	line= "\n"
+	return line + "*[" +tableName + "]*\n" + where + "\n" + line + tableData
 }
 
 //Send telegram message to a specific chanel or chat id

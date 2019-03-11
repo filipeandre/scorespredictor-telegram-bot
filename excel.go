@@ -24,7 +24,7 @@ func getHeaderAttrIndex(attr string, tableHeading *goquery.Selection) int{
 }
 
 //Append headers to the xlsx
-func appendHeaders(tableHtml *goquery.Selection, sheet *xlsx.Sheet, addLeague bool){
+func appendHeaders(tableHtml *goquery.Selection, sheet *xlsx.Sheet, hasLeague bool){
 
 	var (
 		row *xlsx.Row
@@ -45,7 +45,7 @@ func appendHeaders(tableHtml *goquery.Selection, sheet *xlsx.Sheet, addLeague bo
 		rowHtml.Find("td").Each(func(indexTh int, tableHeading *goquery.Selection) {
 
 			//Add league after first
-			if addLeague && indexTr == 0 && indexTh == 1 {
+			if hasLeague && indexTr == 0 && indexTh == 1 {
 				cell = row.AddCell()
 				cell.Value = "League"
 				cell.Merge(0, 1)
@@ -79,7 +79,7 @@ func appendHeaders(tableHtml *goquery.Selection, sheet *xlsx.Sheet, addLeague bo
 
 
 //Save a new sheet
-func saveSheet(name string, table string, htmlStr string, file *xlsx.File, db *sql.DB, where string){
+func saveSheet(name string, table string, htmlStr string, file *xlsx.File, db *sql.DB, where string, hasLeague bool){
 	sheet, err := file.AddSheet(name)
 	if err != nil {
 		stderr(err)
@@ -97,7 +97,7 @@ func saveSheet(name string, table string, htmlStr string, file *xlsx.File, db *s
 
 	// Select the first table and write headers
 	tableHtml:= doc.Find("table").First()
-	appendHeaders(tableHtml, sheet, table == "HOCKEY")
+	appendHeaders(tableHtml, sheet, hasLeague)
 
 	rows, _ := db.Query("SELECT line FROM " + table + " " + where)
 	var line string
