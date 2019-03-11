@@ -24,7 +24,7 @@ type configuration struct {
 //Load configs
 func loadConfiguration() *configuration {
 
-	path:= os.Getenv("SCORESPREDICTOR_HOME") + ".env.yaml"
+	path:= os.Getenv("SCORESPREDICTOR_HOME") + "/.env.yaml"
 	if _, err := os.Stat(path); err == nil {
 		err := godotenv.Load(path)
 		if err != nil {
